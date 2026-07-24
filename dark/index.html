@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Site en construction — Dark Sport</title>
+<link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0a0a;
+  --glass: rgba(255,255,255,0.05);
+  --border: rgba(255,255,255,0.10);
+  --red: #e10600;
+  --red-glow: #ff2b2b;
+  --text: #f5f2ed;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: 'League Spartan', sans-serif; }
+
+body {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg);
+  color: var(--text);
+  padding: 2rem 1rem;
+  position: relative;
+  overflow: hidden;
+}
+
+/* ===== BANDES DIAGONALES RACING EN FOND ===== */
+.stripe {
+  position: absolute;
+  background: linear-gradient(90deg, rgba(225,6,0,0.12), transparent);
+  transform: rotate(-12deg);
+  pointer-events: none;
+  z-index: 0;
+}
+.stripe-1 { width: 200%; height: 60px; top: 15%; left: -50%; animation: stripeSlide 9s ease-in-out infinite; }
+.stripe-2 { width: 200%; height: 40px; bottom: 20%; left: -60%; animation: stripeSlide 12s ease-in-out infinite reverse; }
+@keyframes stripeSlide { 0%,100%{ transform: rotate(-12deg) translateX(0); } 50%{ transform: rotate(-12deg) translateX(40px); } }
+
+/* ===== ORBES ROUGES ===== */
+.orb { position: absolute; border-radius: 50%; filter: blur(90px); pointer-events: none; z-index: 0; }
+.orb-1 { width: 500px; height: 500px; background: radial-gradient(circle, rgba(225,6,0,0.18), transparent 70%); top: -160px; left: -140px; animation: orbFloat 14s ease-in-out infinite; }
+.orb-2 { width: 420px; height: 420px; background: radial-gradient(circle, rgba(225,6,0,0.12), transparent 70%); bottom: -130px; right: -110px; animation: orbFloat2 17s ease-in-out infinite; }
+@keyframes orbFloat  { 0%,100%{transform:translate(0,0)} 50%{transform:translate(40px,-25px)} }
+@keyframes orbFloat2 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(-30px,20px)} }
+
+/* ===== PARTICULES ===== */
+.particle {
+  position: absolute;
+  width: 3px; height: 3px;
+  background: var(--red-glow);
+  border-radius: 50%;
+  opacity: 0.5;
+  animation: drift linear infinite;
+  z-index: 0;
+}
+@keyframes drift {
+  0% { transform: translateY(0); opacity: 0; }
+  10% { opacity: 0.6; }
+  90% { opacity: 0.3; }
+  100% { transform: translateY(-100vh) translateX(15px); opacity: 0; }
+}
+
+.lang-switch {
+  position: fixed;
+  top: 24px; right: 24px;
+  z-index: 5;
+  display: flex;
+  gap: 4px;
+  background: rgba(10,10,10,0.7);
+  border: 1px solid rgba(255,255,255,0.1);
+  backdrop-filter: blur(12px);
+  padding: 5px;
+  border-radius: 999px;
+}
+.lang-switch button {
+  border: none;
+  background: transparent;
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--text);
+  opacity: 0.6;
+  cursor: pointer;
+  transition: 0.2s;
+  font-family: 'League Spartan', sans-serif;
+}
+.lang-switch button.active { background: var(--red); color: white; opacity: 1; }
+
+.card {
+  background: var(--glass);
+  border: 1px solid var(--border);
+  backdrop-filter: blur(22px);
+  -webkit-backdrop-filter: blur(22px);
+  border-radius: 28px;
+  padding: 4rem 3.5rem;
+  text-align: center;
+  max-width: 540px;
+  width: 100%;
+  position: relative;
+  z-index: 2;
+  opacity: 0;
+  transform: translateY(30px);
+  animation: fadeInUp 0.7s ease forwards;
+  overflow: hidden;
+  border-top: 3px solid var(--red);
+}
+
+/* Glow rouge qui suit la souris */
+.card::before {
+  content: "";
+  position: absolute;
+  width: 380px; height: 380px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(225,6,0,0.22), transparent 65%);
+  filter: blur(20px);
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  left: var(--gx, -999px);
+  top: var(--gy, -999px);
+  z-index: 0;
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+.card:hover::before { opacity: 1; }
+.card > * { position: relative; z-index: 1; }
+
+.badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 6px 18px; border-radius: 999px; font-size: 0.78rem; font-weight: 800;
+  color: var(--red-glow); border: 1px solid rgba(225,6,0,0.4);
+  background: rgba(225,6,0,0.1); margin-bottom: 28px; letter-spacing: 1px;
+  text-transform: uppercase;
+}
+.badge svg { width: 13px; height: 13px; }
+
+h1 {
+  font-size: clamp(1.8rem, 4vw, 2.5rem);
+  font-weight: 900;
+  color: var(--text);
+  margin-bottom: 14px;
+  line-height: 1.1;
+  letter-spacing: -0.5px;
+  text-transform: uppercase;
+}
+h1 .highlight {
+  color: var(--red);
+  animation: glow 2.5s ease-in-out infinite;
+}
+
+@keyframes glow {
+  0%,100% { text-shadow: 0 0 20px rgba(225,6,0,0.4); }
+  50% { text-shadow: 0 0 50px rgba(225,6,0,0.7), 0 0 90px rgba(225,6,0,0.3); }
+}
+
+.dots { display: inline-flex; gap: 6px; margin-left: 6px; vertical-align: middle; }
+.dot { width: 8px; height: 8px; border-radius: 50%; background: var(--red); opacity: 0; animation: dotPop 2s ease-in-out infinite; }
+.dot:nth-child(1){ animation-delay: 0s; }
+.dot:nth-child(2){ animation-delay: 0.35s; }
+.dot:nth-child(3){ animation-delay: 0.7s; }
+@keyframes dotPop { 0%{opacity:0;transform:scale(0.5) translateY(4px);} 40%{opacity:1;transform:scale(1.3) translateY(-3px);} 60%{transform:scale(1) translateY(0);} 85%{opacity:1;} 100%{opacity:0;transform:scale(0.5) translateY(4px);} }
+
+.subtitle {
+  opacity: 0.6;
+  font-size: 1rem;
+  line-height: 1.6;
+  margin-bottom: 36px;
+}
+
+.notify {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-bottom: 32px;
+}
+.notify input {
+  flex: 1;
+  min-width: 220px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 12px;
+  padding: 13px 20px;
+  font-size: 0.92rem;
+  font-family: 'League Spartan', sans-serif;
+  outline: none;
+  color: var(--text);
+  transition: 0.2s;
+}
+.notify input::placeholder { color: rgba(245,242,237,0.35); }
+.notify input:focus { border-color: rgba(225,6,0,0.5); background: rgba(255,255,255,0.08); }
+.notify button {
+  background: var(--red);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 13px 28px;
+  font-weight: 800;
+  font-size: 0.92rem;
+  cursor: pointer;
+  font-family: 'League Spartan', sans-serif;
+  transition: 0.25s;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.notify button:hover { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(225,6,0,0.45); background: var(--red-glow); }
+
+.status-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 10px 22px;
+  border-radius: 999px;
+  background: rgba(225,6,0,0.08);
+  border: 1px solid rgba(225,6,0,0.3);
+  width: fit-content;
+  margin: 0 auto;
+}
+.status-dot {
+  width: 9px; height: 9px; border-radius: 50%;
+  background: var(--red-glow);
+  animation: pulseRed 1.6s infinite;
+}
+@keyframes pulseRed { 0%,100%{box-shadow:0 0 0 0 rgba(255,43,43,0.6)} 50%{box-shadow:0 0 0 7px rgba(255,43,43,0)} }
+.status-row span { font-size: 0.8rem; font-weight: 800; color: var(--red-glow); text-transform: uppercase; letter-spacing: 0.5px; }
+
+@keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
+</style>
+</head>
+<body>
+
+<div class="stripe stripe-1"></div>
+<div class="stripe stripe-2"></div>
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+
+<div class="lang-switch">
+  <button id="btn-fr" onclick="setLang('fr')">FR</button>
+  <button id="btn-en" onclick="setLang('en')">EN</button>
+</div>
+
+<div class="card" id="mainCard">
+  <div class="badge">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+    <span id="badge-text">En préparation</span>
+  </div>
+
+  <h1 id="main-title">Bientôt <span class="highlight" id="highlight-word">disponible</span><span class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></span></h1>
+  <p class="subtitle" id="subtitle">On met les bouchées doubles pour livrer un site à la hauteur. Sois le premier averti.</p>
+
+  <div class="notify">
+    <input type="email" id="emailInput" placeholder="ton@email.com">
+    <button id="notifyBtn" onclick="notifyMe()">Me prévenir</button>
+  </div>
+
+  <div class="status-row">
+    <div class="status-dot"></div>
+    <span id="statusText">En développement actif</span>
+  </div>
+</div>
+
+<script>
+// Particules
+const body = document.body;
+for (let i = 0; i < 20; i++) {
+  const p = document.createElement('div');
+  p.className = 'particle';
+  p.style.left = Math.random() * 100 + '%';
+  p.style.bottom = '-10px';
+  p.style.animationDuration = (8 + Math.random() * 12) + 's';
+  p.style.animationDelay = (Math.random() * 10) + 's';
+  body.appendChild(p);
+}
+
+// Glow au survol
+const card = document.getElementById('mainCard');
+card.addEventListener('mousemove', e => {
+  const r = card.getBoundingClientRect();
+  card.style.setProperty('--gx', (e.clientX - r.left) + 'px');
+  card.style.setProperty('--gy', (e.clientY - r.top) + 'px');
+});
+card.addEventListener('mouseleave', () => {
+  card.style.setProperty('--gx', '-999px');
+  card.style.setProperty('--gy', '-999px');
+});
+
+const content = {
+  fr: {
+    badge: "En préparation",
+    title: "Bientôt",
+    highlight: "disponible",
+    subtitle: "On met les bouchées doubles pour livrer un site à la hauteur. Sois le premier averti.",
+    placeholder: "ton@email.com",
+    btn: "Me prévenir",
+    status: "En développement actif",
+    done: "✓ C'est noté !"
+  },
+  en: {
+    badge: "In the works",
+    title: "Coming",
+    highlight: "soon",
+    subtitle: "We're pushing hard to deliver something worthy. Be the first to know.",
+    placeholder: "your@email.com",
+    btn: "Notify me",
+    status: "Actively in development",
+    done: "✓ Done!"
+  }
+};
+
+function setLang(lang) {
+  const c = content[lang];
+  document.getElementById('badge-text').innerText = c.badge;
+  document.getElementById('main-title').childNodes[0].textContent = c.title + ' ';
+  document.getElementById('highlight-word').innerText = c.highlight;
+  document.getElementById('subtitle').innerText = c.subtitle;
+  document.getElementById('emailInput').placeholder = c.placeholder;
+  document.getElementById('notifyBtn').innerText = c.btn;
+  document.getElementById('statusText').innerText = c.status;
+  document.getElementById('btn-fr').classList.toggle('active', lang === 'fr');
+  document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+  document.documentElement.lang = lang;
+  history.replaceState(null, '', `?lang=${lang}`);
+}
+
+const params = new URLSearchParams(window.location.search);
+setLang(params.get('lang') === 'en' ? 'en' : 'fr');
+
+function notifyMe() {
+  const email = document.getElementById('emailInput').value;
+  const lang = document.documentElement.lang;
+  if (email && email.includes('@')) {
+    document.getElementById('notifyBtn').innerText = content[lang].done;
+    document.getElementById('emailInput').value = '';
+  }
+}
+</script>
+</body>
+</html>

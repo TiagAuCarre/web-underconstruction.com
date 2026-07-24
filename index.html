@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Web Under Construction — Choisis ton template</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #f8f9fc, #eef0f7);
+    font-family: 'Poppins', sans-serif;
+    padding: 3rem 1rem;
+  }
+
+  h1 {
+    font-size: 2rem;
+    color: #1a1a2e;
+    margin-bottom: 0.5rem;
+    opacity: 0;
+    animation: fadeIn 0.8s ease forwards;
+  }
+
+  p.subtitle {
+    color: #666;
+    margin-bottom: 3rem;
+    opacity: 0;
+    animation: fadeIn 0.8s ease forwards 0.2s;
+  }
+
+  .cards {
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    max-width: 1100px;
+  }
+
+  .card {
+    width: 300px;
+    height: 300px;
+    background: white;
+    border-radius: 28px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.06);
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    opacity: 0;
+    transform: translateY(30px);
+    animation: fadeInUp 0.6s ease forwards;
+    transition: transform 0.35s ease, box-shadow 0.35s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+  }
+
+  .card:nth-child(1) { animation-delay: 0.3s; }
+  .card:nth-child(2) { animation-delay: 0.45s; }
+  .card:nth-child(3) { animation-delay: 0.6s; }
+
+  .card:hover {
+    transform: translateY(-8px) scale(1.03);
+    box-shadow: 0 20px 45px rgba(0,0,0,0.12);
+  }
+
+  .card-preview {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    opacity: 0.9;
+  }
+
+  /* Couleurs différentes par template, à remplacer par tes vraies previews (screenshots) */
+  .preview-1 { background: linear-gradient(135deg, #667eea, #764ba2); }
+  .preview-2 { background: linear-gradient(135deg, #11998e, #38ef7d); }
+  .preview-3 { background: linear-gradient(135deg, #ff5f6d, #ffc371); }
+
+  .card-content {
+    position: relative;
+    z-index: 2;
+    padding: 1.5rem;
+    background: linear-gradient(to top, rgba(0,0,0,0.55), transparent);
+    color: white;
+  }
+
+  .card-content h3 {
+    margin: 0 0 0.3rem 0;
+    font-size: 1.2rem;
+  }
+
+  .card-content p {
+    margin: 0;
+    font-size: 0.85rem;
+    opacity: 0.85;
+  }
+
+  .lang-toggle {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    z-index: 3;
+    display: flex;
+    gap: 0.3rem;
+    background: rgba(255,255,255,0.85);
+    padding: 0.25rem;
+    border-radius: 999px;
+  }
+
+  .lang-toggle button {
+    border: none;
+    background: transparent;
+    padding: 0.3rem 0.7rem;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    cursor: pointer;
+    color: #333;
+    transition: 0.2s;
+  }
+
+  .lang-toggle button.active {
+    background: #1a1a2e;
+    color: white;
+  }
+
+  @keyframes fadeIn {
+    to { opacity: 1; }
+  }
+
+  @keyframes fadeInUp {
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>
+</head>
+<body>
+
+  <h1 id="main-title">Choisis ton template</h1>
+  <p class="subtitle" id="main-subtitle">Sélectionne une carte et une langue, ton domaine sera prêt en un clic.</p>
+
+  <div class="cards">
+
+    <div class="card" data-template="minimal" data-lang="fr" onclick="goToTemplate(this)">
+      <div class="card-preview preview-1"></div>
+      <div class="lang-toggle" onclick="event.stopPropagation()">
+        <button class="active" onclick="setCardLang(this, 'fr')">FR</button>
+        <button onclick="setCardLang(this, 'en')">EN</button>
+      </div>
+      <div class="card-content">
+        <h3>Minimal</h3>
+        <p>Épuré, moderne, arrondi</p>
+      </div>
+    </div>
+
+    <div class="card" data-template="dark" data-lang="fr" onclick="goToTemplate(this)">
+      <div class="card-preview preview-2"></div>
+      <div class="lang-toggle" onclick="event.stopPropagation()">
+        <button class="active" onclick="setCardLang(this, 'fr')">FR</button>
+        <button onclick="setCardLang(this, 'en')">EN</button>
+      </div>
+      <div class="card-content">
+        <h3>Dark Mode</h3>
+        <p>Sombre, élégant</p>
+      </div>
+    </div>
+
+    <div class="card" data-template="vibrant" data-lang="fr" onclick="goToTemplate(this)">
+      <div class="card-preview preview-3"></div>
+      <div class="lang-toggle" onclick="event.stopPropagation()">
+        <button class="active" onclick="setCardLang(this, 'fr')">FR</button>
+        <button onclick="setCardLang(this, 'en')">EN</button>
+      </div>
+      <div class="card-content">
+        <h3>Vibrant</h3>
+        <p>Coloré, dynamique</p>
+      </div>
+    </div>
+
+  </div>
+
+<script>
+  function setCardLang(btn, lang) {
+    const card = btn.closest('.card');
+    card.dataset.lang = lang;
+    const buttons = btn.parentElement.querySelectorAll('button');
+    buttons.forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  }
+
+  function goToTemplate(card) {
+    const template = card.dataset.template;
+    const lang = card.dataset.lang;
+    window.location.href = `/${template}?lang=${lang}`;
+  }
+</script>
+
+</body>
+</html>

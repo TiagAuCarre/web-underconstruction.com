@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Site en construction — Minimal</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #f8f9fc, #eef0f7);
+    font-family: 'Poppins', sans-serif;
+    padding: 2rem 1rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* ===== BLOBS DOUX EN FOND ===== */
+  .blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(60px);
+    opacity: 0.35;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .blob-1 {
+    width: 400px; height: 400px;
+    background: #667eea;
+    top: -100px; left: -100px;
+    animation: float1 10s ease-in-out infinite;
+  }
+  .blob-2 {
+    width: 340px; height: 340px;
+    background: #a29bfe;
+    bottom: -100px; right: -80px;
+    animation: float2 12s ease-in-out infinite;
+  }
+  @keyframes float1 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(30px,20px)} }
+  @keyframes float2 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(-25px,-15px)} }
+
+  .lang-switch {
+    position: fixed;
+    top: 24px; right: 24px;
+    z-index: 5;
+    display: flex;
+    gap: 0.3rem;
+    background: rgba(255,255,255,0.85);
+    padding: 0.3rem;
+    border-radius: 999px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+  }
+  .lang-switch button {
+    border: none;
+    background: transparent;
+    padding: 0.4rem 0.9rem;
+    border-radius: 999px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    cursor: pointer;
+    color: #333;
+    transition: 0.2s;
+    font-family: 'Poppins', sans-serif;
+  }
+  .lang-switch button.active {
+    background: #1a1a2e;
+    color: white;
+  }
+
+  .card {
+    background: white;
+    border-radius: 32px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.08);
+    padding: 4rem 3.5rem;
+    text-align: center;
+    max-width: 520px;
+    width: 100%;
+    position: relative;
+    z-index: 2;
+    opacity: 0;
+    transform: translateY(30px);
+    animation: fadeInUp 0.7s ease forwards;
+  }
+
+  .icon-wrap {
+    width: 72px; height: 72px;
+    border-radius: 22px;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 24px;
+    box-shadow: 0 12px 30px rgba(102,126,234,0.35);
+  }
+  .icon-wrap svg { width: 32px; height: 32px; stroke: white; }
+
+  h1 {
+    font-size: 1.9rem;
+    font-weight: 800;
+    color: #1a1a2e;
+    margin-bottom: 12px;
+  }
+
+  p.subtitle {
+    color: #666;
+    font-size: 1rem;
+    line-height: 1.6;
+    margin-bottom: 32px;
+  }
+
+  .dots { display: inline-flex; gap: 6px; margin-left: 4px; vertical-align: middle; }
+  .dot { width: 7px; height: 7px; border-radius: 50%; background: #667eea; opacity: 0; animation: dotPop 2.2s ease-in-out infinite; }
+  .dot:nth-child(1){ animation-delay: 0s; }
+  .dot:nth-child(2){ animation-delay: 0.35s; }
+  .dot:nth-child(3){ animation-delay: 0.7s; }
+
+  .notify {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .notify input {
+    flex: 1;
+    min-width: 220px;
+    background: #f5f6fa;
+    border: 1.5px solid transparent;
+    border-radius: 999px;
+    padding: 13px 20px;
+    font-size: 0.92rem;
+    font-family: 'Poppins', sans-serif;
+    outline: none;
+    transition: 0.2s;
+    color: #1a1a2e;
+  }
+  .notify input:focus { border-color: #667eea; background: white; }
+  .notify button {
+    background: #1a1a2e;
+    color: white;
+    border: none;
+    border-radius: 999px;
+    padding: 13px 26px;
+    font-weight: 700;
+    font-size: 0.92rem;
+    cursor: pointer;
+    font-family: 'Poppins', sans-serif;
+    transition: 0.25s;
+  }
+  .notify button:hover { transform: translateY(-2px); box-shadow: 0 10px 25px rgba(26,26,46,0.25); }
+
+  .progress-bar {
+    margin-top: 32px;
+    height: 6px;
+    background: #f0f0f5;
+    border-radius: 999px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    width: 68%;
+    background: linear-gradient(90deg, #667eea, #764ba2);
+    border-radius: 999px;
+    animation: growBar 1.4s ease forwards 0.4s;
+    transform-origin: left;
+    transform: scaleX(0);
+  }
+  .progress-label {
+    margin-top: 10px;
+    font-size: 0.78rem;
+    color: #999;
+    font-weight: 600;
+  }
+
+  @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
+  @keyframes dotPop { 0%{opacity:0;transform:scale(0.5)} 40%{opacity:1;transform:scale(1.2)} 60%{transform:scale(1)} 85%{opacity:1} 100%{opacity:0;transform:scale(0.5)} }
+  @keyframes growBar { to { transform: scaleX(1); } }
+</style>
+</head>
+<body>
+
+<div class="blob blob-1"></div>
+<div class="blob blob-2"></div>
+
+<div class="lang-switch">
+  <button id="btn-fr" onclick="setLang('fr')">FR</button>
+  <button id="btn-en" onclick="setLang('en')">EN</button>
+</div>
+
+<div class="card">
+  <div class="icon-wrap">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10"/>
+      <path d="M12 6v6l4 2"/>
+    </svg>
+  </div>
+
+  <h1 id="main-title">Bientôt disponible<span class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></span></h1>
+  <p class="subtitle" id="subtitle">Nous préparons quelque chose de génial. Laisse ton email pour être prévenu dès l'ouverture.</p>
+
+  <div class="notify">
+    <input type="email" id="emailInput" placeholder="ton@email.com">
+    <button id="notifyBtn" onclick="notifyMe()">Me prévenir</button>
+  </div>
+
+  <div class="progress-bar"><div class="progress-fill"></div></div>
+  <div class="progress-label" id="progressLabel">68% du site déjà prêt</div>
+</div>
+
+<script>
+const content = {
+  fr: {
+    title: "Bientôt disponible",
+    subtitle: "Nous préparons quelque chose de génial. Laisse ton email pour être prévenu dès l'ouverture.",
+    placeholder: "ton@email.com",
+    btn: "Me prévenir",
+    progress: "68% du site déjà prêt",
+    done: "✓ C'est noté !"
+  },
+  en: {
+    title: "Coming soon",
+    subtitle: "We're building something great. Leave your email to get notified at launch.",
+    placeholder: "your@email.com",
+    btn: "Notify me",
+    progress: "68% of the site already done",
+    done: "✓ Done!"
+  }
+};
+
+function setLang(lang) {
+  const c = content[lang];
+  document.getElementById('main-title').firstChild.textContent = c.title;
+  document.getElementById('subtitle').innerText = c.subtitle;
+  document.getElementById('emailInput').placeholder = c.placeholder;
+  document.getElementById('notifyBtn').innerText = c.btn;
+  document.getElementById('progressLabel').innerText = c.progress;
+  document.getElementById('btn-fr').classList.toggle('active', lang === 'fr');
+  document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+  document.documentElement.lang = lang;
+  history.replaceState(null, '', `?lang=${lang}`);
+}
+
+const params = new URLSearchParams(window.location.search);
+setLang(params.get('lang') === 'en' ? 'en' : 'fr');
+
+function notifyMe() {
+  const email = document.getElementById('emailInput').value;
+  const lang = document.documentElement.lang;
+  if (email && email.includes('@')) {
+    document.getElementById('notifyBtn').innerText = content[lang].done;
+    document.getElementById('emailInput').value = '';
+  }
+}
+</script>
+</body>
+</html>
